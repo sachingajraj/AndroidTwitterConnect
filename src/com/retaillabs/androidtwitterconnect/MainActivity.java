@@ -40,6 +40,8 @@ public class MainActivity extends Activity {
    static final String PREF_KEY_OAUTH_TOKEN = "oauth_token";
    static final String PREF_KEY_OAUTH_SECRET = "oauth_token_secret";
    static final String PREF_KEY_TWITTER_LOGIN = "isTwitterLogedIn";
+   
+   static final String TWITTER_USER_NAME = "username";
 
    static final String TWITTER_CALLBACK_URL = "oauth://t4jsample";
 
@@ -212,7 +214,9 @@ public class MainActivity extends Activity {
                    long userID = accessToken.getUserId();
                    User user = twitter.showUser(userID);
                    String username = user.getName();
-                    
+                   e.putString(TWITTER_USER_NAME, username);
+                   e.commit();
+                   
                    // Displaying in xml ui
                    lblUserName.setText(Html.fromHtml("<b>Welcome " + username + "</b>"));
                } catch (Exception e) {
@@ -220,6 +224,20 @@ public class MainActivity extends Activity {
                    Log.e("Twitter Login Error", "> " + e.getMessage());
                }
            }
+       } else {
+    	   // Hide login button
+           btnLoginTwitter.setVisibility(View.GONE);
+
+           // Show Update Twitter
+           lblUpdate.setVisibility(View.VISIBLE);
+           txtUpdate.setVisibility(View.VISIBLE);
+           btnUpdateStatus.setVisibility(View.VISIBLE);
+           btnLogoutTwitter.setVisibility(View.VISIBLE);
+           
+           String username = mSharedPreferences.getString(TWITTER_USER_NAME, "");
+           
+           // Displaying in xml ui
+           lblUserName.setText(Html.fromHtml("<b>Welcome " + username + "</b>"));
        }
 
    }
